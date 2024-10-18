@@ -1,0 +1,7 @@
+select USERNAME, USER_ID,CREATED, COMMON, ORACLE_MAINTAINED from all_users;
+
+SELECT user, machine FROM v$session;
+
+SELECT username, machine, program 
+FROM v$session
+WHERE username IS NOT NULL;

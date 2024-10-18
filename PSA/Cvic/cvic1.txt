@@ -1,0 +1,10 @@
+(omega, A, P) - pravděpodobnostní prostor
+
+De-Morganovy pravidla
+P(/(A sjed B)) = P(/A průň /B)
+P(/(A průň B)) = P(/A sjed /B)
+P(A sjed B) P(A) + P(B) - P(A průň B)
+
+:( Kombinatorika :(
+
+permutace, variace, kombinace, + Opakování

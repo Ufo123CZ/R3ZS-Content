@@ -1,0 +1,6 @@
+DISPLAY=localhost:10.0
+
+instance-20240919-1524/unix:10  MIT-MAGIC-COOKIE-1  9a06142eb186306c4842ac6e101a8b7b
+
+ORACLE_SID orcl
+ORACLE_HOME /opt/oracle/product/19c/dbhome_1
