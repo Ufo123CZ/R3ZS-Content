@@ -1,0 +1,19 @@
+(a+b)	*	(c-d)	-	(e/f)	*	(g-h)
+p1		p2	p3		p4	p5		p6	p7
+
+cobegin
+	begin
+		cobegin
+			p1 || p3
+		coend
+		p2
+	end
+	||
+	begin
+		cobegin
+			p5 || p7
+		coend
+		p6
+	end
+coend
+p4
