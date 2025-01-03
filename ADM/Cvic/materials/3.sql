@@ -1,0 +1,58 @@
+DROP PROFILE SECURE;
+
+-- Tvorba profilu SECURE
+CREATE PROFILE SECURE 
+LIMIT 
+    PASSWORD_LIFE_TIME 30 
+    PASSWORD_VERIFY_FUNCTION VERIFY_FUNCTION;
+
+SELECT *
+FROM ALL_OBJECTS
+WHERE OBJECT_TYPE = 'FUNCTION' AND OWNER = 'SYS' AND OBJECT_NAME LIKE '%PASSWORD%';
+
+-- Tvorba uživatele SPCUSER
+CREATE USER SPCUSER IDENTIFIED BY PokusneHeslo123_
+DEFAULT TABLESPACE users
+PROFILE SECURE;
+
+-- Umožnění přihlášení
+GRANT CREATE SESSION TO SPCUSER;
+
+-- Přiřazení oprávnění
+GRANT SELECT ON V_$SESSION TO SPCUSER;
+GRANT CREATE TABLE TO SPCUSER;
+GRANT CREATE PUBLIC SYNONYM TO SPCUSER;
+
+-- Nastavit limit na data
+ALTER USER SPCUSER QUOTA UNLIMITED ON USERS;
+
+-- Tvorba tabulky (pod SPCUSER)
+CREATE TABLE UZIVATELE as select username,program,logon_time from V$SESSION;
+
+-- Tvorba public synonym (pod SPCUSER)
+CREATE PUBLIC SYNONYM UZIVATELE FOR SPCUSER.UZIVATELE;
+
+-- Přidání poznámky (pod SPCUSER)
+ALTER TABLE uzivatele add poznamka varchar2(2000);
+
+
+-- Tvorba uživatele
+CREATE USER MUJUSER IDENTIFIED BY PokusneHeslo123_;
+
+-- Umožnění přihlášení
+GRANT CREATE SESSION TO MUJUSER;
+
+-- Práva pro mujuser
+GRANT SELECT, UPDATE, INSERT, DELETE ON UZIVATELE TO MUJUSER;
+
+-- Příkazy SPCUSER
+DELETE FROM UZIVATELE WHERE PROGRAM like '%LG%';
+ALTER TABLE UZIVATELE ADD ID_UZIVATELE number;
+
+-- Příkazy MUJUSER
+UPDATE UZIVATELE SET POZNAMKA='Fiktivní připojení' where USERNAME IS NULL;
+
+-- Odpojíme uživatele s nepotvrzenými příkazy
+-- Tools -> Monitor Sessions
+-- dole záložka Contentions
+-- Najít lock, nahoře zabít session
